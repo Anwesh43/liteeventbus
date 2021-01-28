@@ -2,21 +2,22 @@ import Broker from './Broker'
 import Publisher from './Publisher'
 import Subscriber from './Subscriber'
 
-export default class EventBus {
+const EventBus = {
 
-    static startBroker() {
+    startBroker() {
         const broker : Broker = new Broker()
         broker.start()
-    }
+    },
 
-    static createPublisher() : Publisher {
+    createPublisher() : Publisher {
         const pub : Publisher = new Publisher()
         return pub 
-    }
-
-    static createSubscriber() : Subscriber {
+    },
+    
+    createSubscriber() : Subscriber {
         const sub : Subscriber = new Subscriber()
         return sub 
     }
 }
 
+export default EventBus

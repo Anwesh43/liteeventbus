@@ -32,12 +32,16 @@ export default class Broker {
     }
 
     start() {
+        console.log("started broker")
         this.server.handleSockets()
         this.server.filterMessage((socket : WebSocket, message : (PublishMessage | SubscribeMessage)) => {
+            console.log("MSG HERE", isPublishMessage(message), isSubscribeMessage(message))
             if (isPublishMessage(message) && this.subjectSocketMap.has(message.subject)) {
+                //console.log("PUBLISHER", message)
                 this.subjectSocketMap.get(message.subject)?.send(message.data)
             }
             if (isSubscribeMessage(message)) {
+                //console.log("SUBSCRIBER", message)
                 this.subjectSocketMap.set(message.subject, socket)
             }
         })

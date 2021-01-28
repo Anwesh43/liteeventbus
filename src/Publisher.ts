@@ -6,6 +6,11 @@ export default class Publisher {
 
     publish(subject : string, message : Object) {
         const publish = true
+        console.log("published here", subject, message)
         this.client.publish(JSON.stringify({publish, subject, message}))
+    }
+
+    close() {
+        this.client.close()
     }
 }
