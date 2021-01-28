@@ -25,7 +25,7 @@ function isSubscribeMessage(message : (PublishMessage | SubscribeMessage)) : mes
 export default class Broker {
 
     server : Server
-    subjects : Map<String, WebSocket> = new Map()
+    subjectSocketMap : Map<String, WebSocket> = new Map()
 
     constructor() {
         this.server = new Server(PORT)
@@ -33,8 +33,13 @@ export default class Broker {
 
     start() {
         this.server.handleSockets()
-        this.server.filterMessage((socket : WebSocket, data : (PublishMessage | SubscribeMessage)) => {
-            
+        this.server.filterMessage((socket : WebSocket, message : (PublishMessage | SubscribeMessage)) => {
+            if (isPublishMessage(message) && this.subjectSocketMap.has(message.subject)) {
+                this.subjectSocketMap.get(message.subject)?.send(message.data)
+            }
+            if (isSubscribeMessage(message)) {
+                this.subjectSocketMap.set(message.subject, socket)
+            }
         })
     }
 }

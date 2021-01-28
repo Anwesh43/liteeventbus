@@ -11,4 +11,10 @@ export default class Client {
     publish(data : string) {
         this.socket.send(data)
     }
+
+    listen(cb : Function) {
+        this.socket.on('message', (data : string) => {
+            cb(data)
+        })
+    }
 }
