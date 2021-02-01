@@ -4,10 +4,9 @@ export default class Publisher {
 
     client : Client = new Client(`ws://localhost:${PORT}`)
 
-    publish(subject : string, message : Object) {
+    publish(subject : string, data : string) {
         const publish = true
-        console.log("published here", subject, message)
-        this.client.publish(JSON.stringify({publish, subject, message}))
+        this.client.publish(JSON.stringify({publish, subject, data}))
     }
 
     close() {

@@ -5,7 +5,7 @@ import WebSocket from 'ws'
 interface PublishMessage {
     publish: boolean, 
     subject: string, 
-    data: any 
+    data: string 
 }
 
 interface SubscribeMessage {
@@ -32,13 +32,12 @@ export default class Broker {
     }
 
     start() {
-        console.log("started broker")
         this.server.handleSockets()
         this.server.filterMessage((socket : WebSocket, message : (PublishMessage | SubscribeMessage)) => {
-            console.log("MSG HERE", isPublishMessage(message), isSubscribeMessage(message))
             if (isPublishMessage(message) && this.subjectSocketMap.has(message.subject)) {
                 //console.log("PUBLISHER", message)
-                this.subjectSocketMap.get(message.subject)?.send(message.data)
+                const bffr : Buffer = Buffer.from(message.data);
+                this.subjectSocketMap.get(message.subject)?.send(bffr)
             }
             if (isSubscribeMessage(message)) {
                 //console.log("SUBSCRIBER", message)

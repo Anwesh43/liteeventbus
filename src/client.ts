@@ -35,7 +35,7 @@ export default class Client {
 
     listen(cb : Function) {
         this.socket.on('message', (data : Buffer) => {
-            console.log("ORIG_MESSAGE", data.toString())
+           // console.log("ORIG_MESSAGE", data.toString())
             cb(data.toString())
         })
     }

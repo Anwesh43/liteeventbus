@@ -8,7 +8,6 @@ export default class Subscriber {
 
     subscribe(subject : string, cb : Function) {
         const subscribe = true
-        console.log("SUBSCRIBED", subject)
         this.client.publish(JSON.stringify({subscribe, subject}))
         this.client.listen((data : string) => {
             if (cb) {
