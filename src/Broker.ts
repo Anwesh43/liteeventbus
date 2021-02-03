@@ -25,7 +25,7 @@ function isSubscribeMessage(message : (PublishMessage | SubscribeMessage)) : mes
 export default class Broker {
 
     server : Server
-    subjectSocketMap : Map<String, WebSocket> = new Map()
+    subjectSocketMap : Map<String, Array<WebSocket>> = new Map()
 
     constructor() {
         this.server = new Server(PORT)
@@ -37,11 +37,16 @@ export default class Broker {
             if (isPublishMessage(message) && this.subjectSocketMap.has(message.subject)) {
                 //console.log("PUBLISHER", message)
                 const bffr : Buffer = Buffer.from(message.data);
-                this.subjectSocketMap.get(message.subject)?.send(bffr)
+                this.subjectSocketMap.get(message.subject)?.forEach((socket : WebSocket) => {
+                    socket.send(bffr)
+                })
             }
             if (isSubscribeMessage(message)) {
                 //console.log("SUBSCRIBER", message)
-                this.subjectSocketMap.set(message.subject, socket)
+                if (!this.subjectSocketMap.has(message.subject)) { 
+                    this.subjectSocketMap.set(message.subject, []);
+                }
+                this.subjectSocketMap.get(message.subject)?.push(socket)
             }
         })
     }
